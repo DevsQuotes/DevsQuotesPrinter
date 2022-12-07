@@ -29,9 +29,9 @@ func Serve(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespons
 		path += name
 		return nil
 	})
-	pwd, _ := os.Getwd()
+	//pwd, _ := os.Getwd()
 	if err == nil {
-		return events.APIGatewayProxyResponse{Body: path + "---" + pwd}, err
+		return events.APIGatewayProxyResponse{Body: path}, err
 	}
 
 	var req struct {
