@@ -26,11 +26,12 @@ func Serve(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespons
 	log.Print(fmt.Sprintf("body:[%s] ", request.Body))
 	var path string
 	err := filepath.Walk("./", func(name string, info os.FileInfo, err error) error {
-		path = name
-		return fmt.Errorf("%s", name)
+		path += name
+		return nil
 	})
-	if err != nil {
-		return events.APIGatewayProxyResponse{Body: path}, err
+	pwd, _ := os.Getwd()
+	if err == nil {
+		return events.APIGatewayProxyResponse{Body: path + "---" + pwd}, err
 	}
 
 	var req struct {
