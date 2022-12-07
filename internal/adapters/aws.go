@@ -8,6 +8,8 @@ import (
 	"image/jpeg"
 	"log"
 	"net/http"
+	"os"
+	"path/filepath"
 
 	"github.com/aws/aws-lambda-go/events"
 
@@ -22,13 +24,20 @@ var assets = printer.Assets{
 
 func Serve(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 	log.Print(fmt.Sprintf("body:[%s] ", request.Body))
+	err := filepath.Walk("./", func(name string, info os.FileInfo, err error) error {
+		fmt.Println(name)
+		return nil
+	})
+	if err != nil {
+		return events.APIGatewayProxyResponse{}, err
+	}
 
 	var req struct {
 		Text string `json:"text"`
 	}
 
 	b := []byte(request.Body)
-	err := json.Unmarshal(b, &req)
+	err = json.Unmarshal(b, &req)
 
 	if err != nil {
 		log.Println(err)
