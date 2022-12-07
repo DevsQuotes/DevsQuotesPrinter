@@ -3,13 +3,12 @@ package main
 import (
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
+
+	"github.com/josemyduarte/printer/internal/adapters"
 )
 
 func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
-	return events.APIGatewayProxyResponse{
-		StatusCode: 200,
-		Body:       "Hello AWS Lambda and Netlify",
-	}, nil
+	return adapters.Serve(request)
 }
 
 func main() {
