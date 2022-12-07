@@ -7,7 +7,6 @@ import (
 	"image/jpeg"
 	"log"
 	"net/http"
-	"path/filepath"
 
 	"github.com/aws/aws-lambda-go/events"
 
@@ -16,8 +15,8 @@ import (
 
 func Serve(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 	var assets = printer.Assets{
-		BgImgPath: filepath.Join("../", "assets/00-instagram-background.png"),
-		FontPath:  filepath.Join("../", "assets/FiraSans-Light.ttf"),
+		BgImgPath: "assets/00-instagram-background.png",
+		FontPath:  "assets/FiraSans-Light.ttf",
 		FontSize:  60,
 	}
 
