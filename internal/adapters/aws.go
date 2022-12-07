@@ -15,8 +15,8 @@ import (
 
 func Serve(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 	var assets = printer.Assets{
-		BgImgPath: "assets/00-instagram-background.png",
-		FontPath:  "assets/FiraSans-Light.ttf",
+		BgImgPath: "../../assets/00-instagram-background.png",
+		FontPath:  "../../assets/FiraSans-Light.ttf",
 		FontSize:  60,
 	}
 
