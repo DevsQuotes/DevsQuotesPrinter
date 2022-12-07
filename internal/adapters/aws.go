@@ -26,13 +26,14 @@ func Serve(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespons
 	log.Print(fmt.Sprintf("body:[%s] ", request.Body))
 	var path string
 	err := filepath.Walk("./", func(name string, info os.FileInfo, err error) error {
-		path += name
+		log.Println(path)
 		return nil
 	})
-	//pwd, _ := os.Getwd()
-	if err == nil {
-		return events.APIGatewayProxyResponse{Body: path}, err
+	pwd, err := os.Getwd()
+	if err != nil {
+		return events.APIGatewayProxyResponse{}, err
 	}
+	log.Println(pwd)
 
 	var req struct {
 		Text string `json:"text"`
