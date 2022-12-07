@@ -24,12 +24,13 @@ var assets = printer.Assets{
 
 func Serve(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 	log.Print(fmt.Sprintf("body:[%s] ", request.Body))
+	var path string
 	err := filepath.Walk("./", func(name string, info os.FileInfo, err error) error {
-		fmt.Println(name)
-		return nil
+		path = name
+		return fmt.Errorf("%s", name)
 	})
 	if err != nil {
-		return events.APIGatewayProxyResponse{}, err
+		return events.APIGatewayProxyResponse{Body: path}, err
 	}
 
 	var req struct {
