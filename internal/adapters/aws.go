@@ -4,11 +4,9 @@ import (
 	"bytes"
 	"encoding/base64"
 	"encoding/json"
-	"fmt"
 	"image/jpeg"
 	"log"
 	"net/http"
-	"os"
 	"path/filepath"
 
 	"github.com/aws/aws-lambda-go/events"
@@ -16,31 +14,19 @@ import (
 	"github.com/josemyduarte/printer"
 )
 
-var assets = printer.Assets{
-	BgImgPath: "../assets/00-instagram-background.png",
-	FontPath:  "../assets/FiraSans-Light.ttf",
-	FontSize:  60,
-}
-
 func Serve(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
-	log.Print(fmt.Sprintf("body:[%s] ", request.Body))
-	var path string
-	err := filepath.Walk("./", func(name string, info os.FileInfo, err error) error {
-		log.Println(path)
-		return nil
-	})
-	pwd, err := os.Getwd()
-	if err != nil {
-		return events.APIGatewayProxyResponse{}, err
+	var assets = printer.Assets{
+		BgImgPath: filepath.Join("../", "assets/00-instagram-background.png"),
+		FontPath:  filepath.Join("../", "assets/FiraSans-Light.ttf"),
+		FontSize:  60,
 	}
-	log.Println(pwd)
 
 	var req struct {
 		Text string `json:"text"`
 	}
 
 	b := []byte(request.Body)
-	err = json.Unmarshal(b, &req)
+	err := json.Unmarshal(b, &req)
 
 	if err != nil {
 		log.Println(err)
