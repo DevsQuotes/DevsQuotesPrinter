@@ -1,9 +1,8 @@
-package adapters
+package aws
 
 import (
 	"bytes"
 	"encoding/base64"
-	"encoding/json"
 	"image/jpeg"
 	"log"
 	"net/http"
@@ -13,36 +12,8 @@ import (
 	"github.com/josemyduarte/printer"
 )
 
-func Serve(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
-	var assets = printer.Assets{
-		BgImgPath: "../../assets/00-instagram-background.png",
-		FontPath:  "../../assets/FiraSans-Light.ttf",
-		FontSize:  60,
-	}
-
-	var req struct {
-		Text string `json:"text"`
-	}
-
-	b := []byte(request.Body)
-	err := json.Unmarshal(b, &req)
-
-	if err != nil {
-		log.Println(err)
-		return events.APIGatewayProxyResponse{
-			StatusCode: http.StatusBadRequest,
-			Body:       err.Error(),
-		}, err
-	}
-
-	img, err := printer.TextOnImg(
-		printer.Request{
-			BgImgPath: assets.BgImgPath,
-			FontPath:  assets.FontPath,
-			FontSize:  assets.FontSize,
-			Text:      req.Text,
-		},
-	)
+func Serve(request printer.Request) (events.APIGatewayProxyResponse, error) {
+	img, err := printer.TextOnImg(request)
 	if err != nil {
 		log.Println(err)
 		return events.APIGatewayProxyResponse{
