@@ -15,10 +15,10 @@ import (
 
 var (
 	fontURL      = "https://github.com/DevsQuotes/DevsQuotesPrinter/raw/master/assets/FiraSans-Light.ttf"
-	fontFileName = "FiraSans-Light.ttf"
+	fontFileName = "/tmp/FiraSans-Light.ttf"
 
 	bgURL      = "https://github.com/DevsQuotes/DevsQuotesPrinter/raw/master/assets/00-instagram-background.png"
-	bgFileName = "00-instagram-background.png"
+	bgFileName = "/tmp/00-instagram-background.png"
 )
 
 func init() {
