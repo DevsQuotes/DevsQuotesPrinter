@@ -37,6 +37,8 @@ func init() {
 }
 
 func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
+	log.Printf("request received [%+v]", request)
+
 	var ParsedRequest struct {
 		Message struct {
 			Text string `json:"text"`
@@ -46,15 +48,14 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 	b := []byte(request.Body)
 	err := json.Unmarshal(b, &ParsedRequest)
 	if err != nil {
-		log.Println(err)
+		log.Printf("failed to parse request body: %w", err)
 		return events.APIGatewayProxyResponse{
 			StatusCode: http.StatusBadRequest,
 			Body:       err.Error(),
 		}, err
 	}
 
-	log.Printf("request received [%+v]", request)
-	log.Printf("text = [%+v]", ParsedRequest)
+	log.Printf("text = [%+v]", ParsedRequest.Message.Text)
 
 	img, err := printer.TextOnImg(printer.Request{
 		BgImgPath: bgFileName,
@@ -63,21 +64,25 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 		Text:      ParsedRequest.Message.Text,
 	})
 	if err != nil {
-		log.Println(err)
+		log.Printf("failed to print text on image: %w", err)
 		return events.APIGatewayProxyResponse{
 			StatusCode: http.StatusInternalServerError,
 			Body:       err.Error(),
 		}, err
 	}
 
+	log.Printf("printed %s on image", ParsedRequest.Message.Text)
+
 	imgBuf := new(bytes.Buffer)
 	if png.Encode(imgBuf, img) != nil {
-		log.Println(err)
+		log.Printf("failed to encode image bytes: %w", err)
 		return events.APIGatewayProxyResponse{
 			StatusCode: http.StatusInternalServerError,
 			Body:       err.Error(),
 		}, err
 	}
+
+	log.Printf("image encoded")
 
 	return events.APIGatewayProxyResponse{
 		StatusCode:      http.StatusOK,
