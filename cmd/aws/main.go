@@ -40,9 +40,7 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 	log.Printf("request received [%+v]", request)
 
 	var ParsedRequest struct {
-		Message struct {
-			Text string `json:"text"`
-		} `json:"message"`
+		Text string `json:"text"`
 	}
 
 	b := []byte(request.Body)
@@ -55,13 +53,13 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 		}, err
 	}
 
-	log.Printf("text = [%+v]", ParsedRequest.Message.Text)
+	log.Printf("text = [%+v]", ParsedRequest.Text)
 
 	img, err := printer.TextOnImg(printer.Request{
 		BgImgPath: bgFileName,
 		FontPath:  fontFileName,
 		FontSize:  60,
-		Text:      ParsedRequest.Message.Text,
+		Text:      ParsedRequest.Text,
 	})
 	if err != nil {
 		log.Printf("failed to print text on image: %w", err)
@@ -71,7 +69,7 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 		}, err
 	}
 
-	log.Printf("printed %s on image", ParsedRequest.Message.Text)
+	log.Printf("printed %s on image", ParsedRequest.Text)
 
 	imgBuf := new(bytes.Buffer)
 	if png.Encode(imgBuf, img) != nil {
