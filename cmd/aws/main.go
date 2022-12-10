@@ -5,9 +5,10 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
-	"image/jpeg"
+	"image/png"
 	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
@@ -65,7 +66,7 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 	}
 
 	imgBuf := new(bytes.Buffer)
-	if jpeg.Encode(imgBuf, img, nil) != nil {
+	if png.Encode(imgBuf, img) != nil {
 		log.Println(err)
 		return events.APIGatewayProxyResponse{
 			StatusCode: http.StatusInternalServerError,
@@ -78,7 +79,8 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 		Body:            base64.StdEncoding.EncodeToString(imgBuf.Bytes()),
 		IsBase64Encoded: true,
 		Headers: map[string]string{
-			"Content-Type": "image/png",
+			"Content-Type":   "image/png",
+			"Content-Length": strconv.Itoa(len(imgBuf.Bytes())),
 		},
 	}, nil
 
