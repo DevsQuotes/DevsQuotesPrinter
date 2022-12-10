@@ -37,12 +37,14 @@ func init() {
 }
 
 func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
-	var req struct {
-		Text string `json:"text"`
+	var ParsedRequest struct {
+		Message struct {
+			Text string `json:"text"`
+		} `json:"message"`
 	}
 
 	b := []byte(request.Body)
-	err := json.Unmarshal(b, &req)
+	err := json.Unmarshal(b, &ParsedRequest)
 	if err != nil {
 		log.Println(err)
 		return events.APIGatewayProxyResponse{
@@ -52,12 +54,13 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 	}
 
 	log.Printf("request received [%+v]", request)
+	log.Printf("text = [%+v]", ParsedRequest)
 
 	img, err := printer.TextOnImg(printer.Request{
 		BgImgPath: bgFileName,
 		FontPath:  fontFileName,
 		FontSize:  60,
-		Text:      req.Text,
+		Text:      ParsedRequest.Message.Text,
 	})
 	if err != nil {
 		log.Println(err)
