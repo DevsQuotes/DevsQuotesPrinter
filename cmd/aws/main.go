@@ -51,6 +51,8 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 		}, err
 	}
 
+	log.Printf("request received [%+v]", request)
+
 	img, err := printer.TextOnImg(printer.Request{
 		BgImgPath: bgFileName,
 		FontPath:  fontFileName,
